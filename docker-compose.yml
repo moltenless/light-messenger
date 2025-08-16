@@ -1,0 +1,47 @@
+services: 
+  db:
+    image: postgres:16
+    container_name: db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - messenger-network
+    
+  backend:
+    build: ./backend
+    container_name: backend
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ALG=${JWT_ALG}
+      - ACCESS_TTL_MIN=${ACCESS_TTL_MIN}
+      - REFRESH_TTL_DAYS=${REFRESH_TTL_DAYS}
+      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    volumes:
+      - uploads:/app/uploads
+    networks:
+      - messenger-network
+
+volumes:
+  pgdata:
+    name: pgdata
+  uploads: 
+    name: uploads
+
+networks:
+  messenger-network:
+    name: messenger-network
+    driver: bridge
+
