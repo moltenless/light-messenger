@@ -10,4 +10,4 @@ class User(Base):
     username = Column(CITEXT, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
-    updated_at = Column(TIMESTAMP(timezone=True, nullable=True))
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True)
