@@ -4,8 +4,9 @@ from app.core.config import settings
 from app.db.base import Base
 from app.db.session import engine
 from app.api import auth, users
+from app.core.middleware import AuthMiddleware
 
-# Gonne be changed to Alembic
+# Gonne replace with Alembic
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Messenger API")
@@ -16,6 +17,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(AuthMiddleware)
 
 app.include_router(auth.router)
 app.include_router(users.router)
