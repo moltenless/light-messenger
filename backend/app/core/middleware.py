@@ -4,8 +4,6 @@ from app.core.config import settings
 from fastapi import Request
 from jose import jwt
 
-
-
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         try:

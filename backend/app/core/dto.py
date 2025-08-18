@@ -14,5 +14,10 @@ class UserOut(BaseModel):
     email: EmailStr
     username: str
     
-class TokenData(BaseModel):
-    sub: str
+class AuthResponse(BaseModel):
+    user: UserOut
+    tokens: TokenPair
+    
+class UserShortInfo(BaseModel):
+    id: str
+    username: str
