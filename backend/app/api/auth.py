@@ -37,6 +37,6 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
     refresh = create_token(str(user.id), settings.REFRESH_TTL_DAYS * 24 * 60)
     
     return AuthResponse(
-        user=UserOut(id=str(user.id), email=user.email, username=user.username),
+        user=UserOut(id=str(user.id), email=user.email, username=user.username, created_at=user.created_at),
         tokens=TokenPair(access=access, refresh=refresh)
     )

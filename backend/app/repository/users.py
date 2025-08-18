@@ -22,5 +22,5 @@ def create_user(db: Session, new_user: UserCreate) -> UserOut:
     db.add(u)
     db.commit()
     db.refresh(u)
-    return UserOut(id=str(u.id), email=u.email, username=u.username)
+    return UserOut(id=str(u.id), email=u.email, username=u.username, created_at=u.created_at)
     

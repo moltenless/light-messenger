@@ -10,7 +10,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 @router.get("/me", response_model=UserOut)
 def me(user: User = Depends(require_auth)):
-    return UserOut(id=str(user.id), email=user.email, username=user.username)
+    return UserOut(id=str(user.id), email=user.email, username=user.username, created_at=user.created_at)
 
 @router.get("/search")
 def search_users(q: str = Query(..., min_length=1), db: Session = Depends(get_db), _: User = Depends(require_auth)):
