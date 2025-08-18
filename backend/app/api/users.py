@@ -4,7 +4,7 @@ from app.api.auth import get_db
 from app.db.models.user import User
 from app.core.dto import UserOut
 from app.core.deps import require_auth
-from backend.app.repository import users
+from app.repository import users
 
 router = APIRouter(prefix="/users", tags=["users"])
 

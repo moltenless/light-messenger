@@ -3,9 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from app.core.security import create_token, verify_password
 from app.core.config import settings
-from app.core.dto import AuthResponse, UserCreate, TokenPair
+from app.core.dto import AuthResponse, UserCreate, TokenPair, UserOut
 from app.core.deps import get_db
-from backend.app.repository import users
+from app.repository import users
 
 router = APIRouter(prefix='/auth', tags=["auth"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -37,6 +37,6 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
     refresh = create_token(str(user.id), settings.REFRESH_TTL_DAYS * 24 * 60)
     
     return AuthResponse(
-        user=user,
+        user=UserOut(id=str(user.id), email=user.email, username=user.username),
         tokens=TokenPair(access=access, refresh=refresh)
     )
