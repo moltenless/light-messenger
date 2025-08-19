@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response, status
 from app.core.deps import get_db, require_auth
 from app.db.models.user import User
 from app.repository import conversations
@@ -17,22 +17,31 @@ def get_conversations(
     
     conversations_out = [
         UserConversationOut(
-            id=conv.id,
+            id=str(convo.id),
             username=users.get_user(
-                conv.user2_id if conv.user1_id == user.id else conv.user1_id
+                db,
+                convo.user2_id if convo.user1_id == user.id else convo.user1_id
             ).username,
-            created_at=conv.created_at
+            created_at=convo.created_at
         )
-        for conv in source_conversations
+        for convo in source_conversations
     ]
     
     return conversations_out
 
-# @router.get("/{id}")
-# def get_conversation(
-#     id: str,
-#     db: Session = Depends(get_db),
-#     user: User = Depends(require_auth)
-# ):
-#     conv = conversations.get_conversation(id, db)
-#     #convert to dto and return 
+@router.post("/{user2_id}")
+def get_or_create_conversation(
+    user2_id: str,
+    response: Response,
+    db: Session = Depends(get_db),
+    user1: User = Depends(require_auth)
+):
+    convo = conversations.get_conversation_by_usernames(user1.id, user2_id, db)
+    if convo:
+        response.status_code = status.HTTP_200_OK
+        return convo.id
+    
+    convo = conversations.create_conversation(user1.id, user2_id, db)
+    response.status_code = status.HTTP_201_CREATED
+    return convo.id
+    

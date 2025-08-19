@@ -16,12 +16,12 @@ def get_filtered_users(db: Session, username_substring: str, limit: int) -> list
 def credentials_taken(db: Session, new_user: UserCreate) -> bool:
     return db.query(User).filter((User.email == new_user.email) | (User.username == new_user.username)).first()
 
-def create_user(db: Session, new_user: UserCreate) -> User:
+def create_user(db: Session, new_user: UserCreate) -> User | None:
     user = User(email=new_user.email, username=new_user.username, password_hash=hash_password(new_user.password))
     db.add(user)
     db.commit()
     db.refresh(user)
     return user
 
-def get_users(db: Session) -> list[User]:
-    
+def get_users(db: Session) -> list[User] | None:
+    return db.query(User).all()

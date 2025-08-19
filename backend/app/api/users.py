@@ -22,4 +22,9 @@ def get_users(
     db: Session = Depends(get_db),
     _: User = Depends(require_auth)
 ):
+    all = users.get_users(db)
+    return [
+        UserOut(id=str(user.id), email=user.email, username=user.username, created_at=user.created_at) 
+        for user in all
+    ]
     
