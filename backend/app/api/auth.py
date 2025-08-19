@@ -20,7 +20,7 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
     refresh = create_token(str(user.id), settings.REFRESH_TTL_DAYS * 24 * 60)
     
     return AuthResponse(
-        user=user,
+        user=UserOut(id=str(user.id), email=user.email, username=user.username, created_at=user.created_at),
         tokens=TokenPair(access=access, refresh=refresh)
     )
 

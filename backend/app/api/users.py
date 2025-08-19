@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from app.api.auth import get_db
 from app.db.models.user import User
-from app.core.dto import UserOut
+from app.core.dto import UserOut, UserShortInfo
 from app.core.deps import require_auth
 from app.repository import users
 
@@ -14,4 +14,12 @@ def me(user: User = Depends(require_auth)):
 
 @router.get("/search")
 def search_users(q: str = Query(..., min_length=1), db: Session = Depends(get_db), _: User = Depends(require_auth)):
-    return users.get_filtered_users(db, q, 100)
+    matches = users.get_filtered_users(db, q, 100)
+    return [UserShortInfo(id=str(u.id), username=u.username) for u in matches]
+
+@router.get("")
+def get_users(
+    db: Session = Depends(get_db),
+    _: User = Depends(require_auth)
+):
+    

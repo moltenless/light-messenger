@@ -23,3 +23,8 @@ class AuthResponse(BaseModel):
 class UserShortInfo(BaseModel):
     id: str
     username: str
+    
+class UserConversationOut(BaseModel):
+    id: str
+    username: str
+    created_at: datetime
