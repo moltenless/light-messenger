@@ -1,6 +1,6 @@
 from app.db.models.user import User
 from sqlalchemy.orm import Session
-from app.core.dto import UserCreate, UserOut
+from app.core.dto import UserCreate
 from app.core.security import hash_password
 
 def get_user(db: Session, id: str) -> User | None:

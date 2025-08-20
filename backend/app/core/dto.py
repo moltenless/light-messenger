@@ -28,3 +28,6 @@ class UserConversationOut(BaseModel):
     id: str
     username: str
     created_at: datetime
+    
+class SendMessage(BaseModel):
+    content: str

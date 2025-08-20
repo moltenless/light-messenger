@@ -27,4 +27,12 @@ def get_users(
         UserOut(id=str(user.id), email=user.email, username=user.username, created_at=user.created_at) 
         for user in all
     ]
-    
+
+@router.get("/{user_id}")
+def get_user(
+    user_id: str,
+    db: Session = Depends(get_db),
+    _: User = Depends(require_auth)
+):
+    user = users.get_user(db, user_id)
+    return UserOut(id=str(user.id), email=user.email, username=user.username, created_at=user.created_at)
