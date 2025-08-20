@@ -15,3 +15,15 @@ def send_message(convo_id: str, sender_id: str, content: str, db: Session) -> Me
     db.commit()
     db.refresh(message)
     return message
+
+def get_message(id: str, db: Session) -> Message | None:
+    return db.get(Message, id)
+
+def update_message(message: Message, content: str, db: Session) -> None:
+    message.content = content
+    db.commit()
+    db.refresh(message)
+    
+def delete_message(message: Message, db: Session) -> None:
+    db.delete(message)
+    db.commit()

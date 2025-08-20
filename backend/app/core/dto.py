@@ -31,3 +31,6 @@ class UserConversationOut(BaseModel):
     
 class SendMessage(BaseModel):
     content: str
+    
+class UpdateMessage(BaseModel):
+    content: str
