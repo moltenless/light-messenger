@@ -5,8 +5,9 @@ from app.core.deps import get_db, require_auth
 from app.db.models.user import User
 from app.db.models.message import Message
 from app.repository import conversations
-from app.core.dto import SendMessage, UpdateMessage
+from app.core.dto import MessageTransfer, UpdateMessage
 from app.repository import attachments
+from app.api.ws import manager
 
 router = APIRouter(prefix='/messages', tags=["messages"])
 
@@ -26,7 +27,7 @@ def get_messages_thread(
     return messages.get_messages_thread(convo.id, db)
 
 @router.post("/{convo_id}", status_code=201)
-def send_message(
+async def send_message(
     convo_id: str,
     files: list[UploadFile] = File(default=None),
     content: str = Form(...),
@@ -52,6 +53,12 @@ def send_message(
         .filter(Message.id == message.id)
         .first()
     )
+    
+    await manager.broadcast(convo_id, {
+        "event": "new_message",
+        "data": MessageTransfer.model_validate(message).model_dump_json()
+    })
+    
     return message
 
 @router.put("/{message_id}", status_code=204)

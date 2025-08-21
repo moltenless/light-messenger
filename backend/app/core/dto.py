@@ -1,4 +1,6 @@
 from datetime import datetime
+from typing import List, Optional
+from uuid import UUID
 from pydantic import BaseModel, EmailStr
 
 class UserCreate(BaseModel):
@@ -34,3 +36,32 @@ class SendMessage(BaseModel):
     
 class UpdateMessage(BaseModel):
     content: str
+    
+class AttachmentTransfer(BaseModel):
+    id: UUID
+    message_id: UUID
+    original_name: Optional[str]
+    mime_type: Optional[str]
+    size_bytes: Optional[int]
+    storage_path: str
+    created_at: datetime
+    
+    model_config = {
+        "from_attributes": True
+    }
+
+class MessageTransfer(BaseModel):
+    id: UUID
+    conversation_id: UUID
+    sender_id: UUID
+    content: Optional[str]
+    created_at: datetime
+    edited_at: Optional[datetime]
+    deleted_at: Optional[datetime]
+    
+    attachments: List[AttachmentTransfer] = []
+    
+    model_config = {
+        "from_attributes": True
+    }
+    
