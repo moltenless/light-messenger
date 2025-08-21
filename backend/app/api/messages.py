@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from app.repository import messages
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.core.deps import get_db, require_auth
 from app.db.models.user import User
 from app.db.models.message import Message
@@ -46,7 +46,12 @@ def send_message(
         for file in files:
             attachments.create_attachment(file, message.id, db)
     
-    db.refresh(message)
+    message = (             #reload the message having attachments & eagerly load them
+        db.query(Message)
+        .options(joinedload(Message.attachments))
+        .filter(Message.id == message.id)
+        .first()
+    )
     return message
 
 @router.put("/{message_id}", status_code=204)

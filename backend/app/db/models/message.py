@@ -2,6 +2,7 @@ import uuid
 from sqlalchemy import Column, TIMESTAMP, ForeignKey, String, text
 from sqlalchemy.dialects.postgresql import UUID
 from app.db.base import Base
+from sqlalchemy.orm import relationship
 
 class Message(Base):
     __tablename__ = "messages"
@@ -12,3 +13,5 @@ class Message(Base):
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
     edited_at = Column(TIMESTAMP(timezone=True), nullable=True)
     deleted_at = Column(TIMESTAMP(timezone=True), nullable=True)
+    
+    attachments = relationship("Attachment", backref="message", cascade="all, delete-orphan")

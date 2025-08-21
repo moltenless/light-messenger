@@ -1,9 +1,10 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.db.models.message import Message
 
 def get_messages_thread(convo_id: str, db: Session) -> list[Message] | None:
     return (
         db.query(Message)
+        .options(joinedload(Message.attachments))
         .filter(Message.conversation_id == convo_id)
         .order_by(Message.created_at.desc())
         .all()
