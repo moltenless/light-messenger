@@ -27,3 +27,6 @@ def create_attachment(file: UploadFile, message_id: str, db: Session) -> Attachm
     db.commit()
     db.refresh(attachment)
     return attachment
+
+def get_attachment(id: str, db: Session) -> Attachment | None:
+    return db.get(Attachment, id)

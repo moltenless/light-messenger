@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api import auth, users, messages, conversations
+from app.api import auth, users, messages, conversations, attachments
 from app.core.middleware import AuthMiddleware
 
 app = FastAPI(title="Messenger API")
@@ -18,6 +18,7 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(conversations.router)
 app.include_router(messages.router)
+app.include_router(attachments.router)
 
 @app.get("/health")
 def health():
