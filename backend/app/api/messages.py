@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from app.repository import messages
 from sqlalchemy.orm import Session
 from app.core.deps import get_db, require_auth
 from app.db.models.user import User
+from app.db.models.message import Message
 from app.repository import conversations
 from app.core.dto import SendMessage, UpdateMessage
+from app.repository import attachments
 
 router = APIRouter(prefix='/messages', tags=["messages"])
 
@@ -26,7 +28,8 @@ def get_messages_thread(
 @router.post("/{convo_id}", status_code=201)
 def send_message(
     convo_id: str,
-    payload: SendMessage,
+    files: list[UploadFile] = File(default=None),
+    content: str = Form(...),
     db: Session = Depends(get_db),
     user: User = Depends(require_auth)
 ): 
@@ -37,7 +40,13 @@ def send_message(
     if convo.user1_id != user.id and convo.user2_id != user.id:
         raise HTTPException(status_code=403, detail="You don't have access to this conversation")
     
-    message = messages.send_message(convo_id, user.id, payload.content, db)
+    message = messages.send_message(convo_id, user.id, content, db)
+    
+    if files:
+        for file in files:
+            attachments.create_attachment(file, message.id, db)
+    
+    db.refresh(message)
     return message
 
 @router.put("/{message_id}", status_code=204)
