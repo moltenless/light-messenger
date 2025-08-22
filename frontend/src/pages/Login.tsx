@@ -1,29 +1,31 @@
 import { useState } from "react";
 
 export default function Login() {
-    const [email, setEmail] = useState("")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        console.log("Login:", { email, password })
+        console.log("Login:", { username, password })
         // later: call backend POST /login
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50">
-            <div className="w-full max-w-md rounded-2xl bg-white shadow-lg p-6">
-                <h1 className="text-center text-xl font-semibold mb-6">Login</h1>
-                <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="flex items-center justify-center w-full h-full bg-base-200">
+            <div className="flex flex-col justify-center w-1/4 h-2/5 rounded-2xl bg-white shadow-lg p-10">
+                <h1 className="text-center text-5xl font-semibold mb-6">Login</h1>
+                <form onSubmit={handleSubmit} className="space-y-4 p-3 px-7">
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                        <input id="email" value={email} type="email" onChange={e => setEmail(e.target.value)} required className="mt-1 block w-full rounded-md border border-gray-300 p-2" />
+                        <label htmlFor="email" className="block text-2xl font-medium text-gray-700">Username</label>
+                        <input id="email" value={username} type="text" onChange={e => setUsername(e.target.value)} required 
+                        className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-center" />
                     </div>
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                        <input id="password" value={password} type="password" onChange={e => setPassword(e.target.value)} required className="mt-1 block w-full rounded-md border border-gray-300 p-2" />
+                        <label htmlFor="password" className="block text-2xl font-medium text-gray-700">Password</label>
+                        <input id="password" value={password} type="password" onChange={e => setPassword(e.target.value)} required 
+                        className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-center" />
                     </div>
-                    <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+                    <button type="submit" className="btn btn-secondary w-full  text-2xl text-white py-2 rounded-md hover:btn-accent">
                         Login
                     </button>
                 </form>
