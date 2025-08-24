@@ -7,9 +7,17 @@ import Register from './pages/Register';
 import Chats from './pages/Chats';
 import Users from './pages/Users';
 import Chat from './pages/Chat';
+import ProtectedRoute from './state/ProtectedRoute';
+import { useAuthStore } from './state/useAuthStore';
+import { useEffect } from 'react';
 
 
 function App() {
+  const fetchMe = useAuthStore(state => state.fetchMe)
+  useEffect(() => {
+    fetchMe()
+  }, [fetchMe])
+
   return (
     <BrowserRouter>
       <Routes>
@@ -18,9 +26,9 @@ function App() {
         <Route path='/register' element={<Register />} />
 
         <Route element={<Layout />}>
-          <Route path='/chats' element={<Chats />}/>
-          <Route path='/users' element={<Users />}/>
-          <Route path='/chats/:convoId' element={<Chat />}/>
+          <Route path='/chats' element={<ProtectedRoute><Chats /></ProtectedRoute>}/>
+          <Route path='/users' element={<ProtectedRoute><Users /></ProtectedRoute>}/>
+          <Route path='/chats/:convoId' element={<ProtectedRoute><Chat /></ProtectedRoute>}/>
         </Route>
       </Routes>
     </BrowserRouter>

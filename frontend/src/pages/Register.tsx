@@ -1,14 +1,27 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAuthStore } from "../state/useAuthStore"
+import axios from "axios"
 
 export default function RegisterPage() {
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const navigate = useNavigate()
+    const register = useAuthStore(state => state.register)
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        console.log("Register:", { username, email, password })
-        // later: call backend POST /register
+        try {
+            await register(username, email, password)
+            navigate("/chats")
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.data?.detail) {
+                alert(error.response.data.detail);
+            } else {
+                alert("Registration failed for unknown reasons");
+            }
+        }
     }
 
     return (

@@ -1,12 +1,23 @@
-import { Link, NavLink } from "react-router-dom";
+import { useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../state/useAuthStore";
 
-export default function NavBar() { //{ user }: { user: any }
-    const user = {
-        avatar: "https://i.pravatar.cc/160",
-        username: "johndoe",
-        email: "john@example.com",
-        created_at: "2025-08-20",
-    };
+export default function NavBar() {
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    const navigate = useNavigate()
+    const logout = useAuthStore(state => state.logout)
+
+    const onLogout = () => {
+        try {
+            logout()
+            navigate("/")
+        } catch {
+            alert("Logout failed")
+        }
+    }
+
+    const user = useAuthStore(state => state.user)
 
     if (!user) return null;
 
@@ -23,7 +34,7 @@ export default function NavBar() { //{ user }: { user: any }
             <div className="h-full flex-grow flex justify-center items-center">
                 <div className="h-full flex items-center tabs tabs-xl tabs-border">
                     <NavLink to="/chats" className={({ isActive }) =>
-                        `tab text-2xl mx-1 hover:bg-blue-100 rounded-lg transition-all duration-200 ${isActive ? 'tab-active' : ''}` 
+                        `tab text-2xl mx-1 hover:bg-blue-100 rounded-lg transition-all duration-200 ${isActive ? 'tab-active' : ''}`
                     }>Chats</NavLink>
                     <NavLink to="/users" className={({ isActive }) =>
                         `tab text-2xl mx-1 hover:bg-blue-100 rounded-lg transition-all duration-200 ${isActive ? 'tab-active' : ''}`
@@ -31,20 +42,29 @@ export default function NavBar() { //{ user }: { user: any }
                 </div>
             </div>
 
-            <div className="ml-4">
-                <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded-full p-2 transition-all duration-200">
-                    <div className="avatar avatar-online">
-                        <div className="w-16 h-16 rounded-full">
-                            <img src={user.avatar} />
+            <div onClick={() => setShowDropdown(!showDropdown)} className="relative cursor-pointer">
+                <div className="ml-4">
+                    <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded-full p-2 transition-all duration-200">
+                        <div className="w-16 h-16 avatar avatar-online">
+                            <img className="rounded-full" src="https://i.pravatar.cc/45" />
+                        </div>
+                        <div>
+                            <div className="font-semibold text-xl">{user.username}</div>
+                            <div className="text-xs">{user.email}</div>
+                            <div className="text-xs opacity-60">Since {new Date(user.created_at).toLocaleDateString()}</div>
                         </div>
                     </div>
-                    <div>
-                        <div className="font-semibold text-xl">{user.username}</div>
-                        <div className="text-xs">{user.email}</div>
-                        <div className="text-xs opacity-60">Since {new Date(user.created_at).toLocaleDateString()}</div>
-                    </div>
                 </div>
+                {showDropdown && (
+                    <div className="absolute right-0 mt-2 w-24 bg-white rounded shadow-md z-10 p-2">
+                        <button className="w-full text-left px-2 py-1 hover:bg-gray-200 rounded" onClick={() => { setShowDropdown(false); onLogout(); }}>
+                            Logout
+                        </button>
+                    </div>
+                )}
             </div>
+
+
         </nav>
 
         // <div className="navbar bg-base-100 shadow">

@@ -19,7 +19,10 @@ export default function Users() {
                             <div className="font-bold text-2xl">{u.username}</div>
                             <div className="text-sm  opacity-70">{u.email}</div>
                         </div>
-                        <span className="inline-block group-hover:hidden mr-3">{u.created_at}</span>
+                        <div className="group-hover:hidden flex flex-col">
+                            <span className="text-sm font-thin">registered since</span>
+                            <span className="font-thin">{u.created_at}</span>
+                        </div>
                         <Link to={`/chats/${u.id}`} className="btn btn-lg btn-primary hidden group-hover:flex items-center justify-center text-center">Message</Link>
                     </li>
                 ))}

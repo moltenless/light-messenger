@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 
 export default function Landing() {
+    console.log('logout happened')
     return (
         <div className="h-full w-full flex flex-col items-center justify-center text-center">
             <img src="/logo.png" alt="logo" className="w-30 h-40 mb-4" />
