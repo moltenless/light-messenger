@@ -4,10 +4,13 @@ export default function Chat() {
   const { convoId } = useParams();
   const messages = [
     {
-      id: "1", isMine: true, sender: { username: "Vasya", avatar: "https://i.pravatar.cc/40" }, created_at: '2025-08-25', content: "Hey, long time no see", attachments: [{ length: 1024, id: '1', original_name: "picture_of_me.png", size_bytes: 2048 }]
+      id: convoId, isMine: true, sender: { username: "Vasya", avatar: "https://i.pravatar.cc/40" }, created_at: '2025-08-25', content: "Hey, long time no see", attachments: [{ length: 1024, id: '1', original_name: "picture_of_me.png", size_bytes: 2048 }]
     },
     {
       id: "1", isMine: false, sender: { username: "Vasya", avatar: "https://i.pravatar.cc/39" }, created_at: '2025-08-25', content: "Hey, long time no see", attachments: [{ length: 1024, id: '1', original_name: "picture_of_jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjme.png", size_bytes: 2048 }, { length: 1024, id: '1', original_name: "small file.png", size_bytes: 2048 }]
+    },
+    {
+      id: "1", isMine: true, sender: { username: "Vasya", avatar: "https://i.pravatar.cc/39" }, created_at: '2025-08-25', content: "Hey, long time no see", attachments: []
     },
     {
       id: "1", isMine: true, sender: { username: "Vasya", avatar: "https://i.pravatar.cc/41" }, created_at: '2025-08-25', content: "Hey, long time no see", attachments: [{ length: 1024, id: '1', original_name: "picture_of_me.png", size_bytes: 2048 }]
@@ -16,9 +19,9 @@ export default function Chat() {
 
   return (
     <div className="max-w-2xl h-[85vh] flex flex-col mx-auto">
-      <div className="h-full overflow-y-auto border rounded p-4 space-y-4">
+      <div className="h-full overflow-y-auto border rounded p-4">
         {messages.map(msg => (
-          <div className="group">
+          <div className="group ">
 
             <div key={msg.id} className={`chat ${msg.isMine ? "chat-end" : "chat-start"}`}>
 
