@@ -11,12 +11,13 @@ export default function Chats(){
             <h2 className="text-2xl mb-4">Your Conversations</h2>
             <ul className="space-y-3">
                 {convos.map(c => (
-                    <li key={c.id} className="p-4 border rounded-lg flex justify-between items-center hover:bg-base-200">
+                    <li key={c.id} className="group p-4 border rounded-lg flex justify-between items-center bg-blue-200 hover:bg-blue-300 ">
                         <div>
-                            <div className="font-bold">{c.username}</div>
-                            <div className="text-sm opacity-70">{c.email}</div>
+                            <div className="font-bold text-2xl">{c.username}</div>
+                            <div className="text-sm  opacity-70">{c.email}</div>
                         </div>
-                        <Link to={`/chats/${c.id}`} className="btn btn-sm btn-primary">Open</Link>
+                        <span className="inline-block group-hover:hidden">{c.createdAt}</span>
+                        <Link to={`/chats/${c.id}`} className="btn btn-lg btn-primary hidden group-hover:flex items-center justify-center text-center">Open</Link>
                     </li>
                 ))}
             </ul>

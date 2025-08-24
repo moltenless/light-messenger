@@ -11,12 +11,13 @@ export default function Users(){
             <h2 className="text-2xl mb-4">Users</h2>
             <ul className="space-y-3">
                 {users.map(u => (
-                    <li key={u.id} className="p-4 border rounded-lg flex justify-between items-center hover:bg-base-200">
+                    <li key={u.id} className="group p-4 border rounded-lg flex justify-between items-center bg-cyan-100 hover:bg-cyan-200">
                         <div>
-                            <div className="font-bold">{u.username}</div>
-                            <div className="text-sm opacity-70">{u.email}</div>
+                        <div className="font-bold text-2xl">{u.username}</div>
+                        <div className="text-sm  opacity-70">{u.email}</div>
                         </div>
-                        <Link to={`/chats/${u.id}`} className="btn btn-sm btn-primary">Message</Link>
+                        <span className="inline-block group-hover:hidden mr-3">{u.created_at}</span>
+                        <Link to={`/chats/${u.id}`} className="btn btn-lg btn-primary hidden group-hover:flex items-center justify-center text-center">Message</Link>
                     </li>
                 ))}
             </ul>

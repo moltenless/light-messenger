@@ -14,9 +14,9 @@ export default function NavBar() { //{ user }: { user: any }
 
         <nav className="navbar bg-base-100 shadow-md sticky top-0 z-40 flex flex-row px-4 py-2">
             <div className="flex items-center">
-                <Link to="/chats" className="btn btn-ghost normal-case text-xl px-2 mx-10">
+                <Link to="/chats" className="btn btn-ghost normal-case text-xl px-2 mx-2">
                     <img src="/logo.png" alt="logo" className="w-8 h-8 mr-2" />
-                    <span>MyChat</span>
+                    <span>Light Messenger</span>
                 </Link>
             </div>
 

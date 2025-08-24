@@ -12,7 +12,7 @@ export default function Layout() { //{ user }: { user: any }
     if (!user) return null;
 
     return (
-        <div className="w-full h-full">
+        <div className="w-full h-full bg-base-200">
             <NavBar />
 
             <main className="p-6">
