@@ -9,7 +9,7 @@ interface User {
 }
 
 interface AuthState {
-    user: User | null
+    user: User | null | undefined
     token: string | null
     login: (username: string, password: string) => Promise<void>
     register: (username: string, email: string, password: string) => Promise<void>
@@ -19,7 +19,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>(
     (set) => ({
-        user: JSON.parse(localStorage.getItem("user")!),
+        user: undefined,//JSON.parse(localStorage.getItem("user")!),
         token: localStorage.getItem("token"),
         login: async (username, password) => {
             const res = await api.post("/auth/login", { username, password })

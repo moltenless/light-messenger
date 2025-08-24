@@ -4,13 +4,12 @@ import type { JSX } from "react";
 
 export default function ProtectedRoute({ children }: { children: JSX.Element }) {
     const { token, user } = useAuthStore()
-    const fetchMe = useAuthStore(state => state.fetchMe)
-    if (!user){
-        fetchMe()
+
+    if (user === undefined) {
+        return <div>Loading...</div>
     }
-    const user2 = useAuthStore().user
-    if (!token || (!user && !user2)) {
-        console.log("in protected route func the error happaned")
+
+    if (!token || !user) {
         return <Navigate to="/login" replace />
     }
     return children
