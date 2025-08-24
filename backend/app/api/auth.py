@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 from app.core.security import create_token, verify_password
 from app.core.config import settings
-from app.core.dto import AuthResponse, UserCreate, TokenPair, UserOut
+from app.core.dto import AuthResponse, UserCreate, TokenPair, UserLogin, UserOut
 from app.core.deps import get_db
 from app.repository import users
 
@@ -25,9 +25,9 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
     )
 
 @router.post("/login", response_model=AuthResponse)
-def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = users.get_user_by_username(db, form.username)
-    if not user or not verify_password(form.password, user.password_hash):
+def login(payload: UserLogin, db: Session = Depends(get_db)):
+    user = users.get_user_by_username(db, payload.username)
+    if not user or not verify_password(payload.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, 
             detail="Invalid credentials"
