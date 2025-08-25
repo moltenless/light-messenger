@@ -32,7 +32,9 @@ class UserShortInfo(BaseModel):
     
 class UserConversationOut(BaseModel):
     id: str
+    user2_id: str
     username: str
+    email: str
     created_at: datetime
     
 class SendMessage(BaseModel):

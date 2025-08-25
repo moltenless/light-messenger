@@ -18,10 +18,15 @@ def get_conversations(
     conversations_out = [
         UserConversationOut(
             id=str(convo.id),
+            user2_id=str(convo.user2_id if convo.user1_id == user.id else convo.user1_id),
             username=users.get_user(
                 db,
                 convo.user2_id if convo.user1_id == user.id else convo.user1_id
             ).username,
+            email=users.get_user(
+                db,
+                convo.user2_id if convo.user1_id == user.id else convo.user1_id
+            ).email,
             created_at=convo.created_at
         )
         for convo in source_conversations
