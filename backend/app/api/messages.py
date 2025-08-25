@@ -5,9 +5,10 @@ from app.core.deps import get_db, require_auth
 from app.db.models.user import User
 from app.db.models.message import Message
 from app.repository import conversations
-from app.core.dto import MessageTransfer, UpdateMessage
+from app.core.dto import MessageThreadOut, MessageTransfer, UpdateMessage
 from app.repository import attachments
 from app.api.ws import manager
+from app.repository import users
 
 router = APIRouter(prefix='/messages', tags=["messages"])
 
@@ -24,7 +25,12 @@ def get_messages_thread(
     if convo.user1_id != user.id and convo.user2_id != user.id:
         raise HTTPException(status_code=403, detail="You don't have access to this conversation")
     
-    return messages.get_messages_thread(convo.id, db)
+    dto_messages = [MessageTransfer.model_validate(msg) for msg in messages.get_messages_thread(convo.id, db)]
+    
+    return MessageThreadOut(
+        messages = dto_messages, 
+        username = users.get_user(db, convo.user2_id if convo.user1_id == user.id else convo.user1_id).username
+    )
 
 @router.post("/{convo_id}", status_code=201)
 async def send_message(

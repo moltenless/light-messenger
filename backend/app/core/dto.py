@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 from pydantic import BaseModel, EmailStr
+from app.db.models.message import Message
 
 class UserCreate(BaseModel):
     email: EmailStr
@@ -71,3 +72,10 @@ class MessageTransfer(BaseModel):
         "from_attributes": True
     }
     
+class MessageThreadOut(BaseModel):
+    messages: List[MessageTransfer] = []
+    username: str
+    
+    model_config = {
+        "from_attributes": True
+    }

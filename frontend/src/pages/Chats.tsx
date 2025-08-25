@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom"
 import api from "../api/api"
 
 export default function Chats() {
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [convos, setConvos] = useState<any[]>([])
     const navigate = useNavigate()

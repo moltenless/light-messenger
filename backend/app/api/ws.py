@@ -1,5 +1,5 @@
 from typing import Dict, List
-from fastapi import APIRouter, HTTPException, Query, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect
 from app.core import deps
 from app.repository import conversations
 
