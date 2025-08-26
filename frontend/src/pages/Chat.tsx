@@ -126,6 +126,24 @@ export default function Chat() {
     window.URL.revokeObjectURL(url);
   }
 
+  const deleteMessage = async (id: string) => {
+    const response = await api.delete(`messages/${id}`)
+
+    if (response.status == 204) {
+      setMessages(prev => prev.filter(m => m.id != id))
+    }
+  }
+
+  const editMessage = async (id: string) => {
+    const response = await api.put(`messages/${id}`, { content: newContent })
+
+    if (response.status == 204) {
+      setMessages(prev => prev.map(m => m.id === id ? {...m, content: newContent} : m))
+    }
+
+    setNewContent('')
+  }
+
   return (
     <div className="max-w-2xl h-[85vh] flex flex-col mx-auto">
       <div className="h-full overflow-y-auto border rounded p-4">
@@ -145,8 +163,9 @@ export default function Chat() {
                 </div>
                 {msg.sender_id === user?.id && (
                   <div className="hidden group-hover:inline">
-                    <span className="ml-2 underline text-sm text-blue-800 cursor-pointer hover:font-bold">Edit</span>
-                    <span className="ml-2 underline text-sm text-red-800 cursor-pointer hover:font-bold">Delete</span>
+                    <span onClick={() => editMessage(msg.id)} 
+                    className="ml-2 underline text-sm text-blue-800 cursor-pointer hover:font-bold">Edit</span>
+                    <span onClick={() => deleteMessage(msg.id)} className="ml-2 underline text-sm text-red-800 cursor-pointer hover:font-bold">Delete</span>
                   </div>
                 )}
               </div>
@@ -161,7 +180,7 @@ export default function Chat() {
                     Attachments:
                   </div>
                   {msg.attachments.map(att => (
-                    <div key={att.id} onClick={e => loadAttachment(att.id)} className={`text-xs opacity-70 underline ${user?.id === msg.sender_id ? 'text-end' : 'text-start'} cursor-pointer hover:text-blue-600 hover:font-bold`}>
+                    <div key={att.id} onClick={() => loadAttachment(att.id)} className={`text-xs opacity-70 underline ${user?.id === msg.sender_id ? 'text-end' : 'text-start'} cursor-pointer hover:text-blue-600 hover:font-bold`}>
                       {att.original_name} ({(att.size_bytes / 1024).toFixed(1)} KB)
                     </div>
                   ))}
