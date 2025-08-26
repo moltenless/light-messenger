@@ -7,10 +7,11 @@ from app.core.middleware import AuthMiddleware
 app = FastAPI(title="Messenger API")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins,
+    allow_origins=["http://localhost:5173"],#settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["Content-Disposition"]
 )
 app.add_middleware(AuthMiddleware)
 

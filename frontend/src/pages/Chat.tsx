@@ -92,6 +92,40 @@ export default function Chat() {
     }
   }
 
+  const messagesEndRef = useRef<HTMLDivElement | null>(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  const loadAttachment = async (id: string) => {
+    const response = await api.get(`/attachments/${id}`, {
+      responseType: 'blob'
+    });
+
+    const disposition = response.headers['content-disposition'];
+    console.log(disposition)
+    let filename = 'file';
+    const matches = disposition.match(/filename\*?=(?:UTF-8'')?"?([^;"\n]+)"?/i);
+    if (matches && matches[1]) {
+      filename = decodeURIComponent(matches[1]);
+    }
+
+    const url = window.URL.createObjectURL(new Blob([response.data]))
+
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', filename)
+    document.body.appendChild(link)
+    link.click();
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="max-w-2xl h-[85vh] flex flex-col mx-auto">
       <div className="h-full overflow-y-auto border rounded p-4">
@@ -127,7 +161,7 @@ export default function Chat() {
                     Attachments:
                   </div>
                   {msg.attachments.map(att => (
-                    <div key={att.id} className={`text-xs opacity-70 underline ${user?.id === msg.sender_id ? 'text-end' : 'text-start'} cursor-pointer hover:text-blue-600 hover:font-bold`}>
+                    <div key={att.id} onClick={e => loadAttachment(att.id)} className={`text-xs opacity-70 underline ${user?.id === msg.sender_id ? 'text-end' : 'text-start'} cursor-pointer hover:text-blue-600 hover:font-bold`}>
                       {att.original_name} ({(att.size_bytes / 1024).toFixed(1)} KB)
                     </div>
                   ))}
@@ -137,6 +171,7 @@ export default function Chat() {
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="bg-base-300 flex flex-row border-4">
